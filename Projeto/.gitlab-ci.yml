@@ -1,0 +1,22 @@
+stages:
+  - deploy
+
+variables:
+  AWS_DEFAULT_REGION: "us-east-1"
+  LAMBDA_PACKAGE_NAME: "lambda.zip"
+
+before_script:
+  - npm install
+  - apk update
+  - apk add zip
+  - which zip
+  - apk add --no-cache aws-cli
+
+deploy_lambda:
+  image: node:14-alpine
+  stage: deploy
+  script:
+    - npm run package-lambda
+    - aws s3 cp ${LAMBDA_PACKAGE_NAME} s3://my-bucket-cloudformation-compass/lambda.zip
+    - aws cloudformation package --template-file template.yaml --s3-bucket my-bucket-cloudformation-compass --output-template-file packaged-template.yml
+    - aws cloudformation deploy --template-file packaged-template.yml --stack-name MyLambdaStack --capabilities CAPABILITY_IAM

@@ -1,0 +1,10 @@
+{
+    "name": "my-lambda-function",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+      "package-lambda": "ls && zip -r ${LAMBDA_PACKAGE_NAME} . -x '*.git*' '*.gitignore*'"
+    },
+    "dependencies": {},
+    "devDependencies":{}
+}
